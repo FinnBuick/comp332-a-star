@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README.html</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
+</head>
+
+<body>
+
+<h1>Macquarie University, Department of Computing </h1>
+
+<h2>COMP332 Programming Languages 2018 </h2>
+
+<h2>A-Star: Path planning using the A* algorithm in Scala </h2>
+
+<h3>Introduction </h3>
+
+<p>This project implements a version of the A* algorithm for path finding on a 2-D grid of <em>cells</em>, written in a functional style in Scala. Our implementation is inspired by the presentation of this algorithm given in the following pages:</p>
+
+<ul>
+<li><a href="http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html">http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html</a></li>
+<li><a href="https://www.redblobgames.com/pathfinding/a-star/introduction.html">https://www.redblobgames.com/pathfinding/a-star/introduction.html</a></li>
+</ul>
+
+<p>The algorithm takes a 2-D map with <em>obstacles</em> placed in specified cells, along with specified <em>start</em> and <em>target</em> cells. It computes a minimum length path from start to target, each step of which is either a horizontal or a vertical move into an adjacent cell that does not contain an obstacle.</p>
+
+<p>The A* algorithm maintains various collections of cells proceeds from one search step to the next:</p>
+
+<ul>
+<li>The <em>visited</em> cells, these are the cells which have been considered (or visited) at some point so far.</li>
+<li>The <em>open</em> cells, these are visited cells which are queued for further investigation by visiting their neighbours.</li>
+<li>The <em>closed</em> cells, these are the visited cells that are not currently under further investigation.</li>
+<li>The <em>fringe</em> which is the set of all open visited cells.</li>
+</ul>
+
+<p>As the A* algorithm visits cells it computes a <em>heuristic</em> value for that cell which is expressed as a sum of two values:</p>
+
+<ul>
+<li>The <em>actual cost</em> of travelling along the path from start to this cell, and</li>
+<li>An <em>estimated cost</em> of travelling from this cell to the target. Here the estimate we use is the <a href="https://en.wikipedia.org/wiki/Manhattan_distance"><em>Manhattan or taxicab distance</em></a> from the cell to the target.</li>
+</ul>
+
+<p>To determine the order in which open cells are analysed, we compute their heuristic values and consider those with the lowest heuristics first. To ensure that A* actually finds a minimal length path the function to compute these heuristics must satisfy an <a href="https://en.wikipedia.org/wiki/Admissible_heuristic"><em>admissibility condition</em></a>.</p>
+
+<p>It is possible that closed cells should be re-opened if a shorter path is found to that cell in the process of investigating other cells. In the simple scenario implemented here, however, our heuristic function satisfies a stronger <a href="https://en.wikipedia.org/wiki/Consistent_heuristic"><em>consistency condition</em></a> which ensures that we need never re-open a cell once it has been closed.</p>
+
+<p>The following image, which was generated using the <a href="https://github.com/underscoreio/doodle">Doodle image library</a>, illustrates the state of the A* algorithm at the end of a process of planning a path.</p>
+
+<p><img src="PlannedPath.png" alt="planned path" title="A planned path." /></p>
+
+<p>Here the cells containing obstacles are displayed in <em>dark slate blue</em>. The optimal path found is illustrated in <em>gold</em>, and it proceeds from the highlighted <em>red</em> cell inside the box to the highlighted cell outside of the box. The cells displayed in <em>light green</em> are those that had been visited and closed in the process of finding that path. Those in <em>dark green</em> are the cells that remain in the fringe heap when the algorithm terminated.</p>
+
+<p>We use the following abstract data-structures to keep track of these sets of cells:</p>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Set_(abstract_data_type)">sets</a> to keep track of obstacles and visited cells</li>
+<li>a <a href="https://en.wikipedia.org/wiki/Priority_queue">priority queue</a> containing the cells that are open for further analysis in an order prioritised by a <em>heuristic value</em> which is computed as a combination of the distance travelled to get to that cell and an estimate of the distance to travel to the target.</li>
+</ul>
+
+<p>We provide functional implementations of these abstract data structures based upon <a href="https://en.wikipedia.org/wiki/2-3_tree">2-3 trees</a> and <a href="https://en.wikipedia.org/wiki/Binomial_heap">binomial heaps</a>. These data-structures are <a href="https://en.wikipedia.org/wiki/Immutable_object"><em>immutable</em></a> and <a href="https://en.wikipedia.org/wiki/Persistent_data_structure"><em>persistent</em></a>.</p>
+
+<h3>Source modules.</h3>
+
+<ul>
+<li><p><a href="src/main/scala/BTrees.scala">BTrees.scala</a> a functional implementation of <a href="https://en.wikipedia.org/wiki/B-tree">B-trees</a> or more specifically <a href="https://en.wikipedia.org/wiki/2-3_tree">2-3 trees</a>. This implements different kinds of B-tree nodes using <a href="https://en.wikipedia.org/wiki/Scala_(programming_language)#Case_classes_and_pattern_matching">case classes</a> and makes extensive use of pattern matching.</p></li>
+<li><p><a href="src/main/scala/BinomialHeaps.scala">BinomialHeaps.scala</a> a functional implementation of <a href="https://en.wikipedia.org/wiki/Binomial_heap">Binomial Heaps</a>. The key section of this implementation is the <em>heap merge</em> operation provided by the <code>BinomialHeap.mergeAux()</code>. The process of <a href="https://en.wikipedia.org/wiki/Binomial_heap#Merge">merging two binomial heaps</a> is really just a disguised version of the <a href="https://en.wikipedia.org/wiki/Binary_number#Addition">addition of binary numbers</a>. All of the other binomial heap operations are defined in terms of the merge operation.</p></li>
+<li><p><a href="src/main/scala/AStar.scala">AStar.scala</a> this is the core module implementing the <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* algorithm</a>. It largely follows the problem and implementation structure discussed on the following <a href="https://www.redblobgames.com/pathfinding/a-star/introduction.html">Red Blob Games page</a>.</p></li>
+<li><p><a href="src/main/scala/PathPlan.scala">PathPlan.scala</a> provides a class to encapsulate the data generated by executing the A* path planning method. This comprises references to the obstacle map, start and target cells, the planned path as a linked list of <em>cell visit objects</em>, the visited set and the fringe set. It also uses this data to generate a <a href="https://github.com/underscoreio/doodle">Doodle</a> object which renders this data as an image of the kind shown above.</p></li>
+<li><p><a href="src/main/scala/Main.scala">Main.scala</a> a driver which creates a path planning problem and solves it using the A* algorithm provided by <a href="src/main/scala/AStar.scala">AStar.scala</a>. The planned path, open and closed sets are displayed graphically in a window as a Doodle image.</p></li>
+<li><p><a href="src/main/scala/Values.scala">Values.scala</a> basic container classes representing <a href="https://en.wikipedia.org/wiki/Key-value_association">key-value pairs</a> and <em>prioritised values</em>.</p></li>
+<li><p><a href="src/main/scala/Utils.scala">Utils.scala</a> some miscellaneous utility functions.</p></li>
+</ul>
+
+<p>To compile an execute this code run the Scala <a href="https://www.scala-sbt.org/">simple built tool (<code>sbt</code>)</a> from the root directory of this project and execute the <code>run</code> action to compile the project and run its <code>main()</code> method.</p>
+
+<hr />
+
+<p><a href="http://orcid.org/0000-0002-4137-6982">Dominic Verity</a><br />
+Last modified: 13 August 2017<br />
+<a href="http://mozilla.org/MPL/2.0/">Copyright (c) 2018 by Dominic Verity. Macquarie University. All rights reserved.</a></p>
+
+</body>
+</html>

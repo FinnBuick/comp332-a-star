@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>assignment1.html</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
+</head>
+
+<body>
+
+<h1>Macquarie University, Department of Computing </h1>
+
+<h2>COMP332 Programming Languages 2018 </h2>
+
+<h2>Assignment 1 </h2>
+
+<p>Due: 11am Wednesday 5 September (week 6)<br />
+Worth: 10% of unit assessment</p>
+
+<p>Marks breakdown:</p>
+
+<ul>
+<li>Code: 50% (of which tests are worth 10%)</li>
+<li>Report: 50% (of which test description is worth 10%)</li>
+</ul>
+
+<p>Submit a notice of disruption via <a href="https://ask.mq.edu.au">Ask@MQ</a> if you are unable to submit on time for medical or other legitimate reasons.</p>
+
+<p>Late penalty without proper justification: 20% of the full marks for the assessment per day or part thereof late.</p>
+
+<h3>Overview </h3>
+
+<p>The framework project for this assignment implements (most of) a simple <a href="https://en.wikipedia.org/wiki/Motion_planning">path planner</a> using the <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A*-algorithm</a>. This demonstrates the kind of algorithm used to plan the paths of autonomous agents in computer games or of robots in factories.</p>
+
+<p>You should consult the <a href="README.md">README file</a> of this project for more detail about its implementation and for links to lots of information about the A* algorithm and the B-trees and binomial heaps we've used to implement it.</p>
+
+<h3>What you have to do </h3>
+
+<p>You can clone the skeleton sbt project for this assignment from its <a href="https://bitbucket.org">BitBucket</a> repository at <a href="https://bitbucket.org/dominicverity/COMP332-A-star">https://bitbucket.org/dominicverity/COMP332-A-star</a>. This skeleton contains a semi-complete implementation which is missing the following:</p>
+
+<ul>
+<li>Implementations of the search method <code>find</code>, the pretty print method <code>pprint</code>, and the in order traversal method <code>inOrder</code> of the <code>BTree</code> class in the <a href="src/main/scala/BTrees.scala">BTrees.scala</a> module.</li>
+<li>Code to render a path plan as a <a href="https://github.com/underscoreio/doodle">Doodle image</a> which is missing from the <code>PathPlan</code> class in the <a href="src/main/scala/PathPlan.scala">PathPlan.scala</a> module.</li>
+</ul>
+
+<p>Search for the <code>FIXME</code> comments to find where this code is missing. Your task in this assignment is threefold:</p>
+
+<ul>
+<li>Provide implementations to replace this missing code.</li>
+<li>Construct a suite of automated tests of your implementations of the <code>find()</code>, <code>pprint()</code> and <code>inOrder()</code> methods of the <code>BTree</code> class.</li>
+<li>Write a technical report describing the code and tests you have written.</li>
+</ul>
+
+<p>You should consult the comments in our code for more information about what these methods are expected to do and how they might be implemented. Here is some information about the outputs we expect from them:</p>
+
+<ul>
+<li><p><code>BTree.find</code>: If we were to construct a B-tree containing the words <code>&quot;when&quot;, &quot;too&quot;, &quot;much&quot;, &quot;sport&quot;, &quot;is&quot;, &quot;barely&quot;, &quot;enough&quot;</code>, by executing the code</p>
+
+<pre><code>val t1 = BTree(&quot;when&quot;, &quot;too&quot;, &quot;much&quot;, &quot;sport&quot;, &quot;is&quot;, &quot;barely&quot;, &quot;enough&quot;)
+</code></pre>
+
+<p>at the sbt console say, then the code</p>
+
+<pre><code>t1.find(&quot;too&quot;)
+</code></pre>
+
+<p>should return the value <code>Some(&quot;too&quot;)</code>, because the value <code>&quot;too&quot;</code> is an entry in this tree, whereas the code</p>
+
+<pre><code>t1.find(&quot;far&quot;)
+</code></pre>
+
+<p>should return the value <code>None</code>, because <code>&quot;far&quot;</code> is not an entry in this tree.</p></li>
+<li><p><code>BTree.pprint</code>: If we were to construct a B-tree containing the integers <code>5,7,1,9,13,11,10,2</code>, by executing the code</p>
+
+<pre><code>val t2 = BTree(5,7,1,9,13,11,10,2)     
+</code></pre>
+
+<p>at the sbt console say, then the code</p>
+
+<pre><code>print(t2.toString)
+</code></pre>
+
+<p>should display the pretty printed output:</p>
+
+<pre><code>TwoNode(
+    TwoNode(
+        ThreeNode(
+            EmptyNode(),
+            entry: 1,
+            EmptyNode(),
+            entry: 2,
+            EmptyNode()),
+        entry: 5,
+        TwoNode(
+            EmptyNode(),
+            entry: 7,
+            EmptyNode())),
+    entry: 9,
+    TwoNode(
+        TwoNode(
+            EmptyNode(),
+            entry: 10,
+            EmptyNode()),
+        entry: 11,
+        TwoNode(
+            EmptyNode(),
+            entry: 13,
+            EmptyNode())))
+</code></pre></li>
+<li><p><code>BTree.inOrder</code>: If we reuse the trees from the last two examples and execute the code</p>
+
+<pre><code>t1.inOrder
+</code></pre>
+
+<p>at the sbt console then it should return the value</p>
+
+<pre><code>List(barely, enough, is, much, sport, too, when)
+</code></pre>
+
+<p>this being the list of the words stored in the tree in <em>alphabetical order</em> and if we type</p>
+
+<pre><code>t2.inOrder
+</code></pre>
+
+<p>it should return the value</p>
+
+<pre><code>List(1, 2, 5, 7, 9, 10, 11, 13)
+</code></pre>
+
+<p>this being the list of numbers stored in that three in <em>ascending numerical order</em>. We might note that if we type the following at the console:</p>
+
+<pre><code>val t3 = BTree(1,2,1,3,5,3,5,1,2,7,2,4,5)
+t3.inOrder
+</code></pre>
+
+<p>it we should obtain the value</p>
+
+<pre><code>List(1, 2, 3, 4, 5, 7)
+</code></pre>
+
+<p>because our implementation of B-trees rules out having two entries which values are equivalent.</p></li>
+<li><p><code>PathPlan.mapImage</code>: An image illustrating the kind of image we are looking for, along with an associated description, can be found in the <a href="README.md">README</a> file of the assignment framework.</p></li>
+</ul>
+
+<p><strong>Note 1:</strong> once you have correctly implemented the <code>BTree.find</code> method the A* algorithm implementation in <a href="src/main/scala/AStar.scala">AStar.scala</a> module should work correctly. At that point the application should no longer hang when you execute the <code>run</code> task at the sbt console. That being said, it still won't display anything interesting until you've added code to implement construct a nice image to `PlanPath.mapImage.</p>
+
+<p><strong>Note 2:</strong> In your implementation of the <code>BTree.find</code> method you will have to compare entries stored in the tree with the value you are searching for. To check whether one such value <code>v</code> is less than (greater than) another one <code>w</code> you can use the usual comparison operator <code>v &lt; w</code> (or <code>v &gt; w</code>). If you want to check them for equality, however, you should use an expression of the form <code>v equiv w</code> (rather than <code>v == w</code>). The reason for this is a matter of some Scala arcana - ask a question about it on the forum if you are interested in finding out more.</p>
+
+<h3>Running and testing your code </h3>
+
+<p>The skeleton for this assignment is designed to be run from within the Scala <a href="https://www.scala-sbt.org/">simple build tool (<code>sbt</code>)</a>. To do this from the console run the command <code>sbt</code> from the root directory of the assignment framework project. After a few messages you should end up at the following prompt:</p>
+
+<pre><code>assignment1 0.1 2.12.6&gt;
+</code></pre>
+
+<p>You can use the following <em>tasks</em> to compile, run and test the code:</p>
+
+<ul>
+<li><code>run</code> compiles and runs the application.</li>
+<li><code>compile</code> compiles any modules that have been updated since the last compile operation.</li>
+<li><code>test</code> compiles any updated modules and executes the automated tests. The are simply Scala modules which can be found in the <a href="src/test/scala">tests directory</a>.</li>
+<li><code>console</code> compiles any updated modules and allows you to execute Scala code at a console.</li>
+</ul>
+
+<p>Note that if you try to <code>run</code> the framework code &quot;out-of-the-box&quot; things will appear to hang, and eventually an <code>OutOfMemory</code> exception will be raised. This is because some vital code is missing from the <code>BTree.scala</code> module on which the <code>AStar.scala</code> implementation depends. In this situation you can terminate execution by pressing ^C (control-C) and then restart <code>sbt</code>.</p>
+
+<p>The file <a href="src/test/scala/BTreeTests.scala">BTreeTests.scala</a> illustrates the basic infrastructure for writing automated tests using the <a href="http://www.scalatest.org/">ScalaTest</a> framework. At the moment it simply contains tests of the behaviour of empty <code>BTree</code> objects.</p>
+
+<h3>Asking questions </h3>
+
+<p>We've tried to give you lots of pointers on how to complete this assignment, but we are sure there are plenty of things we have missed. So you are strongly encouraged to ask lots questions about this assignment on the COMP332 forum. So start the assignment early and when you get stuck post a question - all of these will be answered in detail. You can, of course, ask questions about this assignment in your tutorial class, your tutor will be happy to help you.</p>
+
+<p>We will not, however, answer forum questions about this assignment after 6pm on Monday the 3rd of September 2018. So please don't leave your questions to the last moment.</p>
+
+<h3>What you must hand in and how </h3>
+
+<p>A zip file containing all of the code for your project and a type-written report.</p>
+
+<p>Submit every source and build file that is needed to build your program from source, including files in the skeleton that you have not changed. Do not add any new files or include multiple versions of your files. Do not include any libraries or generated files (run the sbt <code>clean</code> command before you zip your project). We will compile all of the files that you submit using sbt, so you should avoid any other build mechanisms.</p>
+
+<p>Your submission should include all of the tests that you have used to make sure that your program is working correctly. Note that just testing one or two simple cases is not enough for many marks. You should test as comprehensively as you can.</p>
+
+<p>Your report should describe how you have achieved the goals of the assignment. Do not neglect the report since it is worth 50% of the marks for the assignment.</p>
+
+<p>Your report should contain the following sections:</p>
+
+<ul>
+<li>A title page or heading that gives the assignment details, your name and student number.</li>
+<li>A brief introduction that summarises the aim of the assignment and the structure of the rest of the report.</li>
+<li>A description of the design and implementation work that you have done to achieve the goals of the assignment. Listing some code fragments may be useful to illustrate your description, but don't give a long listing. Leaving out obvious stuff is OK, as long as what you have done is clear. A good rule of thumb is to include enough detail to allow a fellow student to understand it if they are at the stage you were at when you started work on the assignment.</li>
+<li>A description of the testing that you carried out. You should demonstrate that you have used a properly representative set of test cases to be confident that you have covered all the bases. Include details of the tests that you used and the rationale behind why they were chosen. Do not just print the tests out without explanation.</li>
+</ul>
+
+<p>Submit your code and report electronically as a single zip file called <code>ass1.zip</code> using the appropriate submission link on the COMP332 iLearn website by the due date and time. Your report should be in PDF format.</p>
+
+<p>DO NOT SUBMIT YOUR ASSIGNMENT OR DOCUMENTATION IN ANY OTHER FORMAT THAN ZIP and PDF, RESPECTIVELY. Use of any other format slows down the marking and may result in a mark deduction.</p>
+
+<h3>Marking </h3>
+
+<p>The assignment will be assessed according to the assessment standards for the unit learning outcomes.</p>
+
+<p>Marks will be allocated equally to the code and to the report. Your code will be assessed for correctness and quality with respect to the assignment description. Marking of the report will assess the clarity and accuracy of your description and the adequacy of your testing. 20% of the marks for the assignment will be allocated to testing.</p>
+
+<hr />
+
+<p><a href="http://orcid.org/0000-0002-4137-6982">Dominic Verity</a><br />
+Last modified: 13 August 2018<br />
+<a href="http://mozilla.org/MPL/2.0/">Copyright (c) 2018 by Dominic Verity. Macquarie University. All rights reserved.</a></p>
+
+</body>
+</html>
