@@ -289,22 +289,22 @@ abstract sealed class BTree[T](implicit ord : Ordering[T])
     * Parameters:
     *    -   `tab` the number of spaces to indent each line by.
     */
-  def pprint(tab : Int) : String =
+  def pprint(tab : Int) : String = {
+
     this match {
-      case EmptyNode() => "EmptyNode()"
-      case TwoNode(t1, u1, t2) => ("TwoNode(\n"
-                                          + " " * tab + t1.pprint(tab) + ",\n"
-                                          + " " * tab + "entry: " + u1 + ",\n"
-                                          + " " * tab + t2.pprint(tab) + "\n"
-                                          + ")")
-      case ThreeNode(t1, u1, t2, u2, t3) => ("ThreeNode(\n"
-                                          + " " * tab + t1.pprint(tab) + ",\n"
-                                          + " " * tab + "entry: " + u1 + ",\n"
-                                          + " " * tab + t2.pprint(tab) + ",\n"
-                                          + " " * tab + "entry: " + u2 + ",\n"
-                                          + " " * tab + t3.pprint(tab) + "\n"
-                                          + ")")
+      case EmptyNode() => " " * tab + "EmptyNode()"
+      case TwoNode(t1, u1, t2) => (" " * tab +"TwoNode(\n"
+                                          + t1.pprint(tab + tab_width) + ",\n"
+                                          + " " * (tab_width + tab) + "entry: " + u1 + ",\n"
+                                          + t2.pprint(tab + tab_width) + ")")
+      case ThreeNode(t1, u1, t2, u2, t3) => (" " * tab + "ThreeNode(\n"
+                                          + t1.pprint(tab + tab_width) + ",\n"
+                                          + " " * (tab_width + tab) + "entry: " + u1 + ",\n"
+                                          + t2.pprint(tab + tab_width) + ",\n"
+                                          + " " * (tab_width + tab) + "entry: " + u2 + ",\n"
+                                          + t3.pprint(tab + tab_width) + ")")
     }
+  }
 
 
 

@@ -88,7 +88,8 @@ class BTreeSpec extends FlatSpec with Matchers {
             EmptyNode(),
             entry: 13,
             EmptyNode())))\"""" in {
-    assertResult("""TwoNode(
+    assertResult(
+"""TwoNode(
     TwoNode(
         ThreeNode(
             EmptyNode(),
