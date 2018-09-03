@@ -266,6 +266,7 @@ abstract sealed class BTree[T](implicit ord : Ordering[T])
       case ThreeNode(t1, u1, t2, u2, t3) if (v > u1 && v < u2) => t2.find(v)
       case ThreeNode(t1, u1, t2, u2, t3) if (v equiv u2) => Some(u2)
       case ThreeNode(t1, u1, t2, u2, t3) if (v < u2) => t3.find(v)
+      case _ => None
     }
 
 
