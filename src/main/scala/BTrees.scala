@@ -290,7 +290,6 @@ abstract sealed class BTree[T](implicit ord : Ordering[T])
     *    -   `tab` the number of spaces to indent each line by.
     */
   def pprint(tab : Int) : String = {
-
     this match {
       case EmptyNode() => " " * tab + "EmptyNode()"
       case TwoNode(t1, u1, t2) => (" " * tab +"TwoNode(\n"
@@ -306,9 +305,6 @@ abstract sealed class BTree[T](implicit ord : Ordering[T])
     }
   }
 
-
-
-
   /**
     * Convert the tree to an ordered list of values by making a depth first,
     * left to right traversal. Implemented using a straightforward variant of the
@@ -320,11 +316,14 @@ abstract sealed class BTree[T](implicit ord : Ordering[T])
     *    -   A list containing all of the entries of the tree sorted in order from
     *        smallest to largest.
     */
-  def inOrder() : List[T] = Nil
-
-  /** FIXME add code to implement the in-order traversal method. **/
+  def inOrder() : List[T] = {
+    this match {
+      case EmptyNode() => List[T]()
+      case TwoNode(t1, u1, t2) => (t1.inOrder :+ u1) ::: t2.inOrder
+      case ThreeNode(t1, u1, t2, u2, t3) => (((t1.inOrder :+ u1) ::: t2.inOrder) :+ u2) ::: t3.inOrder
+    }
+  }
 }
-
 /**
   * Companion object for the `BTree` class. Contains the case classes
   * implementing different kinds of BTree nodes and some utility

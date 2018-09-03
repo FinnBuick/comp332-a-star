@@ -62,60 +62,14 @@ class BTreeSpec extends FlatSpec with Matchers {
     }
   }
 
-  // My Tests
+  //pprint() tests
 
-  it should """pretty print to the string "TwoNode(
-    TwoNode(
-        ThreeNode(
-            EmptyNode(),
-            entry: 1,
-            EmptyNode(),
-            entry: 2,
-            EmptyNode()),
-        entry: 5,
-        TwoNode(
-            EmptyNode(),
-            entry: 7,
-            EmptyNode())),
-    entry: 9,
-    TwoNode(
-        TwoNode(
-            EmptyNode(),
-            entry: 10,
-            EmptyNode()),
-        entry: 11,
-        TwoNode(
-            EmptyNode(),
-            entry: 13,
-            EmptyNode())))\"""" in {
+  it should """pretty print the correct string""" in {
     assertResult(
-"""TwoNode(
-    TwoNode(
-        ThreeNode(
-            EmptyNode(),
-            entry: 1,
-            EmptyNode(),
-            entry: 2,
-            EmptyNode()),
-        entry: 5,
-        TwoNode(
-            EmptyNode(),
-            entry: 7,
-            EmptyNode())),
-    entry: 9,
-    TwoNode(
-        TwoNode(
-            EmptyNode(),
-            entry: 10,
-            EmptyNode()),
-        entry: 11,
-        TwoNode(
-            EmptyNode(),
-            entry: 13,
-            EmptyNode())))""") {
-      BTree(5,7,1,9,13,11,10,2).toString
-    }
+"TwoNode(\n    TwoNode(\n        ThreeNode(\n            EmptyNode(),\n            entry: 1,\n            EmptyNode(),\n            entry: 2,\n            EmptyNode()),\n        entry: 5,\n        TwoNode(\n            EmptyNode(),\n            entry: 7,\n            EmptyNode())),\n    entry: 9,\n    TwoNode(\n        TwoNode(\n            EmptyNode(),\n            entry: 10,\n            EmptyNode()),\n        entry: 11,\n        TwoNode(\n            EmptyNode(),\n            entry: 13,\n            EmptyNode())))") { BTree(5,7,1,9,13,11,10,2).toString }
   }
+
+  //find() tests
 
   it should "return Some(\"Hello\") when `find` is invoked" in {
     assertResult(Some("Hello")) {
@@ -141,6 +95,20 @@ class BTreeSpec extends FlatSpec with Matchers {
                     "when", "too", "much", "sport", "is", "barely", "enough",
                     "when", "too", "much", "sport", "is", "barely", "enough")
       .find("trops")
+    }
+  }
+
+  //inOrder() Tests
+
+  it should "return List(barely, enough, is, much, sport, too, when) when inOrder is invoked" in {
+    assertResult(List("barely", "enough", "is", "much", "sport", "too", "when")) {
+      BTree("when", "too", "much", "sport", "is", "barely", "enough").inOrder
+    }
+  }
+
+  it should "return List(1, 2, 5, 7, 9, 10, 11, 13) when inOrder is invoked" in {
+    assertResult(List(1, 2, 5, 7, 9, 10, 11, 13)) {
+      BTree(5,7,1,9,13,11,10,2).inOrder
     }
   }
 
