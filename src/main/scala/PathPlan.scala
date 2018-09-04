@@ -65,7 +65,7 @@ class PathPlan (map : PathPlanner, start : Loc, target : Loc,
           x <- 1 to width
 
             image =
-              Image.square(50)
+              Image.square(20)
 
             } yield image
           } yield row
