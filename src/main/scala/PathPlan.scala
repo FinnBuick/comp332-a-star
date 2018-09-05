@@ -55,24 +55,30 @@ class PathPlan (map : PathPlanner, start : Loc, target : Loc,
     * path planning algorithm.
     */
   lazy val mapImage : Image = {
-    val height : Int = 24
-    val width : Int = 24
 
     val cells : Seq[Seq[Image]] =
       for {
-        y <- 1 to height
+        y <- 1 to frameWidth
         row = for {
-          x <- 1 to width
+          x <- 1 to frameWidth
 
-            image =
-              Image.square(20)
+            image = Image.square(cellSize)
+
+            // if (fringeSet.member(x, y)) {
+            //   image = image fillColor fringeColour
+            // }
+            // else if (pathSet.member(x, y)) {
+            //   image = image fillColor pathColour
+            // }
+            // else if (closedSet.member(x, y)) {
+            //   image = image fillColor closedColour
+            // }
 
             } yield image
           } yield row
 
           collapseToMapImage(cells)
         }
-
 }
 
 

@@ -69,6 +69,16 @@ class BTreeSpec extends FlatSpec with Matchers {
 "TwoNode(\n    TwoNode(\n        ThreeNode(\n            EmptyNode(),\n            entry: 1,\n            EmptyNode(),\n            entry: 2,\n            EmptyNode()),\n        entry: 5,\n        TwoNode(\n            EmptyNode(),\n            entry: 7,\n            EmptyNode())),\n    entry: 9,\n    TwoNode(\n        TwoNode(\n            EmptyNode(),\n            entry: 10,\n            EmptyNode()),\n        entry: 11,\n        TwoNode(\n            EmptyNode(),\n            entry: 13,\n            EmptyNode())))") { BTree(5,7,1,9,13,11,10,2).toString }
   }
 
+  it should """pretty print to the string
+  "TwoNode(
+      EmptyNode(),
+      entry: 1,
+      EmptyNode())"""" in {
+          assertResult("TwoNode(\n    EmptyNode(),\n    entry: 1,\n    EmptyNode())"){
+            BTree[Int](1).toString
+          }
+  }
+
   //find() tests
 
   it should "return Some(\"Hello\") when `find` is invoked" in {
