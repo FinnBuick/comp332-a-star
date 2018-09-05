@@ -1,5 +1,5 @@
 
-# Macquarie University, Department of Computing #
+# Finneas Buick 44604181
 
 ## COMP332 Programming Languages 2018 ##
 
@@ -15,7 +15,7 @@ This method uses a simple recursive implementation of BST search, adapted for us
 Then it uses pattern matching on the current node, starting at the root of the BTree while checking the values/entries in the node to determine which branch to take. For example if the current node is a
 >`TwoNode(t1, u1, t2)`
 
-with subtrees `t1` and `t2` and entry `u1 = 5` and `v = 2`(e.g we are searching for the value 2) then we can use the sorted nature of the BTree to search efficiently by checking that `v < u1` and then using `t1.find(v)` to recurse on the left sub-tree. We know that the left sub-tree either must contain `v` otherwise it does not exist in the BTree. When we reach the node we are looking e.g when `v equiv u1`we return an Option containing u1.
+with sub-trees `t1` and `t2` and entry `u1 = 5` and `v = 2`(e.g we are searching for the value 2) then we can use the sorted nature of the BTree to search efficiently by checking that `v < u1` and then using `t1.find(v)` to recurse on the left sub-tree. We know that the left sub-tree either must contain `v` otherwise it does not exist in the BTree. When we reach the node we are looking e.g when `v equiv u1`we return an Option containing u1.
 >`Some(u1)`
 
 Using this branching method significantly reduces the amount of nodes that we must visit compared to a typical brute force algorithm where all nodes would visited to find the correct value. Since each node we visit either has the correct value or we need to search only one of its sub-trees, the resulting time complexity is O(log n) instead of O(n) for brute force.
@@ -35,8 +35,17 @@ The `pprint()` method is used to print out the structure of a BTree at the prope
  Finally we recurse on the right child `t2`with
  > t2.pprint(tab + tab_width)
 
- again passing in the correct indentation. Followed by `TwoNode`'s closing parenthesis/
+ again passing in the correct indentation. Followed by `TwoNode`'s closing parenthesis.
 
 A similar process is followed in the case of a `ThreeNode()`, however ill spare you the details.
 
 ## `BTrees.inOrder()`
+
+The `inOrder()` method converts a `BTree` into an ordered list of values. It accomplishes this by performing a standard depth first search on the `BTree`. Starting at the root node, `inOrder()` does a pattern match to determine the sub-type of the current node. Obviously an empty node should be just return an empty list so in this case we return `List[T]()`. In the case of a `TwoNode(t1, u1, t2)` we must append the entry `u1` to the tail end of the list returned by `t1.inOrder()`, this is done using Scala's `:+` operator which appends single elements to a List containing the same type of values. So far we have the left sub-tree in a list with,
+> `(t1.inOrder :+ u1)`
+
+but now we must add the right sub-tree's list using the list concatenation operator `:::` to concatenate both lists into a single list that we can then return
+>`(t1.inOrder :+ u1) ::: t2.inOrder`
+
+The same process is followed for a `ThreeNode(t1, u1, t2, u2, t3)` however we must append `u2` and concatenate the result with the 3rd sub-tree  `t3` and return the resulting list
+>`(((t1.inOrder :+ u1) ::: t2.inOrder) :+ u2) ::: t3.inOrder`
